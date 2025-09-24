@@ -200,9 +200,6 @@
         </div>
     </div>
 
-  <!-- Tombol tambah kendaraan -->
-  <button type="button" id="add-kendaraan" class="btn-secondary">+ Tambah Kendaraan</button>
-
   <hr>
 
     <!-- 12. Hasil Kunjungan -->
