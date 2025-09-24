@@ -1,0 +1,233 @@
+/* ====== Warna Utama ====== */
+:root {
+    --primary-color: #1E3A8A;   /* biru tua */
+    --secondary-color: #2563EB; /* biru */
+    --accent-color: #3B82F6;    /* biru terang */
+    --text-light: #ffffff;
+    --text-dark: #1f2937;
+    --bg-light: #f3f4f6;
+    --card-bg: #ffffff;
+    --shadow: 0 4px 8px rgba(0,0,0,0.08);
+    --transition: all 0.3s ease;
+}
+
+/* === Global === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg-light);
+    color: var(--text-dark);
+}
+
+/* ====== Sidebar ====== */
+.sidebar {
+    width: 250px;
+    background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
+    color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    color: #fff;
+    overflow-y: auto;   /* biar bisa scroll */
+    overflow-x: hidden; /* cegah scroll horizontal */
+    height: 100vh;
+    z-index: 1000;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
+}
+
+.sidebar .logo .logo-bg {
+    background: #fff;
+    padding: 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.sidebar .logo img {
+    width: 120px;
+    height: auto;
+    border-radius: 0;
+    display: block;
+}
+
+/* Sidebar nav */
+.sidebar nav {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 30px;
+}
+
+.sidebar nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+    background-color: rgba(255,255,255,0.15);
+    transform: translateX(5px);
+}
+
+/* Section Title */
+.sidebar-section {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  text-transform: uppercase;
+  margin: 20px 0 8px 20px;
+}
+
+/* Submenu */
+.menu-item .submenu {
+  display: none;
+  flex-direction: column;
+  margin-left: 40px;
+}
+
+.menu-item .submenu a {
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.menu-item .submenu a:hover,
+.menu-item .submenu a.active {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Expand Icon Rotate */
+.menu-item.open .expand-icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+/* ====== Main Content ====== */
+.main {
+    flex: 1;
+    margin-left: 250px;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+/* ====== Header ====== */
+.header {
+    background: var(--card-bg);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 500;
+}
+
+.header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.header .user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header .user img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--accent-color);
+}
+
+/* Hamburger untuk mobile */
+.hamburger {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+/* ====== Content ====== */
+.content {
+    flex: 1;
+    padding: 24px;
+    background: var(--bg-light);
+}
+
+.card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+}
+
+/* ====== Logout Button ====== */
+.logout-btn {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 200px;
+        transform: translateX(0);
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
+}

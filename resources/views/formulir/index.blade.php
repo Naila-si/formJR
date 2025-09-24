@@ -76,7 +76,7 @@
             </datalist>
             </div>
 
-        <div class="form-group">
+        {{-- <div class="form-group">
           <label for="jabatan">Jabatan</label>
           <input list="jabatan-list" name="jabatan" id="jabatan" placeholder="ketik nama jabatan...">
             <datalist id="jabatan-list">
@@ -92,7 +92,7 @@
                 <option value="Pelaksana Administrasi Tk.II">
                 <option value="LBJR">
             </datalist>
-        </div>
+        </div> --}}
 
         <div class="form-group">
           <label>Telah melakukan kunjungan ke Pemilik/Operator atas nama PT/CV?</label>
@@ -138,14 +138,17 @@
         <!-- Nomor Kendaraan / Plat -->
         <div class="form-group">
             <label>Nopol / Nama Kapal</label>
-            <input type="text" name="kendaraan[nopol][]" placeholder="BM 1234 CD / Kapal ABC">
+            <input type="text" name="kendaraan[nopol][]" id="nopolInput" list="nopolList" placeholder="BM 1234 CD">
+            <datalist id="nopolList">
+                @foreach($nopolList as $nopol)
+                    <option value="{{ $nopol }}">
+                @endforeach
+            </datalist>
         </div>
 
-        <!-- Upload Surat Operasi -->
+        <!-- Info Outstanding -->
         <div class="form-group">
-            <label>Upload Surat Operasi</label>
-            <small>Upload maksimal 2 file (contoh: STNK, KIR)</small>
-            <input type="file" name="kendaraan[surat_operasi][][]" multiple>
+            <small class="osInfo" style="color: red; font-weight: bold;"></small>
         </div>
 
         <!-- Status Armada -->
@@ -153,15 +156,22 @@
             <label>Status Kendaraan</label>
             <select name="kendaraan[status][]" class="status-select">
             <option value="">-- Pilih Status --</option>
+            <option value="beroperasi_bayar">Beroperasi + Bayar </option>
             <option value="beroperasi">Beroperasi</option>
-            <option value="tidak_beroperasi">Tidak Beroperasi</option>
             <option value="dijual">Dijual</option>
             <option value="ubah_sifat">Ubah Sifat</option>
             <option value="ubah_bentuk">Ubah Bentuk</option>
             <option value="rusak_sementara">Rusak Sementara</option>
             <option value="rusak_selamanya">Rusak Selamanya</option>
             <option value="tidak_ditemukan">Tidak Ditemukan</option>
+            <option value="cadangan">Cadangan</option>
             </select>
+        </div>
+
+        <div class="form-group conditional hidden" data-status="beroperasi_bayar">
+            <label>Jumlah Pembayaran</label>
+            <small>Pembayaran boleh lebih dari nilai nominal OS</small>
+            <input type="number" name="kendaraan[jumlah_bayar][]" placeholder="Masukkan jumlah pembayaran">
         </div>
 
         <!-- Upload tambahan muncul sesuai status -->
@@ -190,16 +200,11 @@
             <input type="file" name="kendaraan[surat_rusak_selamanya][][]" multiple>
         </div>
 
-        <!-- Rekomendasi -->
-        <div class="form-group">
-            <label>Rekomendasi Tindak Lanjut</label>
-            <textarea name="kendaraan[rekomendasi][]" placeholder="Tulis rekomendasi..."></textarea>
-        </div>
-
         <hr>
         </div>
     </div>
-
+    <!-- Tombol tambah kendaraan -->
+    <button type="button" id="add-kendaraan" class="btn-secondary">+ Tambah Kendaraan</button>
   <hr>
 
     <!-- 12. Hasil Kunjungan -->
@@ -207,15 +212,15 @@
     <div class="form-group">
         <label>Penjelasan Hasil Kunjungan</label>
         <textarea name="hasil_kunjungan" placeholder="Tuliskan Nopol / Nama Kapal dan penjelasan berdasarkan hasil kunjungan..."></textarea>
-        <small>Tambahkan gambar atau file dokumen jika diperlukan</small>
-        <input type="file" name="hasil_file[]" multiple>
+        {{-- <small>Tambahkan gambar atau file dokumen jika diperlukan</small>
+        <input type="file" name="hasil_file[]" multiple> --}}
     </div>
 
-    <!-- 13. Jumlah Tunggakan -->
+    {{-- <!-- 13. Jumlah Tunggakan -->
     <div class="form-group">
         <label>Jumlah Tunggakan (Rp)</label>
         <input type="number" name="tunggakan" placeholder="Contoh: 5000000">
-    </div>
+    </div> --}}
 
     <!-- 14. Janji Bayar -->
     <div class="form-group">
@@ -240,7 +245,7 @@
         </div>
 
         <div class="form-group">
-          <label>Upload Surat Pernyataan & Evidence</label>
+          <label>Upload Surat Pernyataan & Evidence (max 5 file)</label>
           <input type="file" name="evidence[]" multiple>
         </div>
 
@@ -256,7 +261,7 @@
             </div>
         </div>
 
-        <!-- Kesadaran Penyetoran Iuran Wajib -->
+        {{-- <!-- Kesadaran Penyetoran Iuran Wajib -->
         <div class="form-group">
             <label>Kesadaran Penyetoran Iuran Wajib</label>
             <div class="rating">
@@ -266,7 +271,7 @@
             <input type="radio" name="profiling[iuran]" value="2" id="iuran-2"><label for="iuran-2">★</label>
             <input type="radio" name="profiling[iuran]" value="1" id="iuran-1"><label for="iuran-1">★</label>
             </div>
-        </div>
+        </div> --}}
 
         <!-- Keramaian Penumpang -->
         <div class="form-group">
@@ -292,7 +297,7 @@
             </div>
         </div>
 
-        <!-- Ketaatan Uji KIR -->
+        {{-- <!-- Ketaatan Uji KIR -->
         <div class="form-group">
             <label>Ketaatan Uji KIR / Sertifikat Keselamatan Kapal</label>
             <div class="rating">
@@ -302,7 +307,7 @@
             <input type="radio" name="profiling[kir]" value="2" id="kir-2"><label for="kir-2">★</label>
             <input type="radio" name="profiling[kir]" value="1" id="kir-1"><label for="kir-1">★</label>
             </div>
-        </div>
+        </div> --}}
 
         <div class="form-group">
             <label>Tanda Tangan Petugas</label>
@@ -570,11 +575,8 @@
 
   function updateProgressbar() {
     progressSteps.forEach((step, idx) => {
-      if (idx <= currentStep) {
-        step.classList.add("active");
-      } else {
-        step.classList.remove("active");
-      }
+      if (idx <= currentStep) step.classList.add("active");
+      else step.classList.remove("active");
     });
     const actives = document.querySelectorAll(".progress-step.active");
     progress.style.width = ((actives.length - 1) / (progressSteps.length - 1)) * 100 + "%";
@@ -602,24 +604,19 @@
   document.querySelectorAll(".conditional").forEach(sel => {
     sel.addEventListener("change", e => {
       let uploadDiv = e.target.parentNode.querySelector(".upload-dijual");
-      if (e.target.value === "ya") {
-        uploadDiv.classList.remove("hidden");
-      } else {
-        uploadDiv.classList.add("hidden");
-      }
+      if (e.target.value === "ya") uploadDiv.classList.remove("hidden");
+      else uploadDiv.classList.add("hidden");
     });
   });
 
-   // Tambah kendaraan baru
+  // Tambah kendaraan baru
   document.getElementById('add-kendaraan').addEventListener('click', function () {
     const list = document.getElementById('kendaraan-list');
     const item = document.querySelector('.kendaraan-item').cloneNode(true);
 
-    // kosongkan semua input
-    item.querySelectorAll('input, textarea, select').forEach(el => {
-      if (el.type === 'file') el.value = "";
-      else el.value = "";
-    });
+    item.querySelectorAll('input, textarea, select').forEach(el => el.value = "");
+    item.querySelectorAll('.conditional, .upload-conditional').forEach(div => div.classList.add('hidden'));
+    item.querySelectorAll('.osInfo').forEach(os => os.innerText = ""); // reset osInfo
 
     list.appendChild(item);
   });
@@ -629,32 +626,126 @@
     if (e.target.classList.contains('remove-kendaraan')) {
       const item = e.target.closest('.kendaraan-item');
       const list = document.getElementById('kendaraan-list');
-      if (list.children.length > 1) {
-        item.remove(); // hapus hanya kalau ada lebih dari 1 kendaraan
-      } else {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Tidak bisa dihapus!',
-          text: 'Minimal harus ada 1 kendaraan.',
-          confirmButtonColor: '#3085d6',
-          confirmButtonText: 'Mengerti 👍'
-        });
-      }
+      if (list.children.length > 1) item.remove();
+      else Swal.fire({
+        icon: 'warning',
+        title: 'Tidak bisa dihapus!',
+        text: 'Minimal harus ada 1 kendaraan.',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Mengerti 👍'
+      });
     }
   });
 
-  // Kondisi upload tambahan berdasarkan status
-  document.addEventListener('change', function (e) {
-    if (e.target.classList.contains('status-select')) {
-      const container = e.target.closest('.kendaraan-item');
-      const selected = e.target.value;
-      container.querySelectorAll('.upload-conditional').forEach(div => {
-        div.classList.add('hidden');
-        if (div.dataset.status === selected) {
-          div.classList.remove('hidden');
-        }
-      });
+  // Fetch OS untuk kendaraan-item
+  document.addEventListener('change', function(e) {
+    if (e.target.matches('[name="kendaraan[nopol][]"]')) {
+      let nopol = e.target.value;
+      if (!nopol) return;
+
+      fetch(`/get-os/${encodeURIComponent(nopol)}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Data tidak ditemukan');
+          return res.json();
+        })
+        .then(data => {
+          const osInfo = e.target.closest('.kendaraan-item').querySelector('.osInfo');
+          const nominal = Number(data.nilai_outstanding); // paksa jadi number
+          if (!isNaN(nominal)) {
+            osInfo.style.color = "green";
+            osInfo.innerText = "Nominal OS: " + formatRupiah(nominal);
+          } else {
+            osInfo.style.color = "red";
+            osInfo.innerText = "Data OS tidak valid";
+          }
+        })
+        .catch(err => {
+          const osInfo = e.target.closest('.kendaraan-item').querySelector('.osInfo');
+          osInfo.style.color = "red";
+          osInfo.innerText = err.message;
+        });
     }
+  });
+
+  // Fetch OS untuk input tunggal nopolInput (jika ada)
+  const nopolInput = document.getElementById('nopolInput');
+  if (nopolInput) {
+    nopolInput.addEventListener('change', function() {
+      let nopol = this.value;
+      if (!nopol) return;
+
+      fetch(`/get-os/${encodeURIComponent(nopol)}`)
+        .then(res => {
+          if (!res.ok) throw new Error('Data tidak ditemukan');
+          return res.json();
+        })
+        .then(data => {
+            const osInfo = document.getElementById('osInfo'); // langsung pakai id
+            const nominal = Number(data.nilai_outstanding);
+            if (!isNaN(nominal)) {
+                osInfo.style.color = "green";
+                osInfo.innerText = "Nominal OS: " + formatRupiah(nominal);
+            } else {
+                osInfo.style.color = "red";
+                osInfo.innerText = "Data OS tidak valid";
+            }
+        })
+        .catch(err => {
+          const osInfo = document.getElementById('osInfo');
+          osInfo.style.color = "red";
+          osInfo.innerText = err.message;
+        });
+    });
+  }
+
+  function formatRupiah(angka) {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 2 }).format(angka);
+  }
+
+  document.querySelector('.status-select')?.addEventListener('change', function() {
+    let selected = this.value;
+    document.querySelectorAll('.conditional').forEach(div => {
+      if (div.getAttribute('data-status') === selected) div.classList.remove('hidden');
+      else div.classList.add('hidden');
+    });
+  });
+
+  document.getElementById('evidenceInput')?.addEventListener('change', function () {
+    if (this.files.length > 5) {
+      alert("Maksimal upload 5 file saja!");
+      this.value = "";
+    }
+  });
+
+  const form = document.querySelector('form');
+  form.addEventListener('submit', function(e) {
+    if (!navigator.geolocation) {
+      e.preventDefault();
+      alert("Browser Anda tidak mendukung geolocation.");
+      return;
+    }
+
+    e.preventDefault();
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        let inputLat = document.createElement('input');
+        inputLat.type = 'hidden';
+        inputLat.name = 'latitude';
+        inputLat.value = position.coords.latitude;
+        form.appendChild(inputLat);
+
+        let inputLng = document.createElement('input');
+        inputLng.type = 'hidden';
+        inputLng.name = 'longitude';
+        inputLng.value = position.coords.longitude;
+        form.appendChild(inputLng);
+
+        form.submit();
+      },
+      function(err) {
+        alert("Anda harus mengizinkan akses lokasi untuk submit form!");
+      }
+    );
   });
 
   function initSignaturePad(canvasId, inputId) {
@@ -666,57 +757,30 @@
     ctx.lineCap = "round";
     ctx.strokeStyle = "black";
 
-    function startDraw(e) {
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(getX(e), getY(e));
-        e.preventDefault();
-    }
+    function startDraw(e) { drawing = true; ctx.beginPath(); ctx.moveTo(getX(e), getY(e)); e.preventDefault(); }
+    function draw(e) { if (!drawing) return; ctx.lineTo(getX(e), getY(e)); ctx.stroke(); e.preventDefault(); }
+    function stopDraw() { if (!drawing) return; drawing = false; document.getElementById(inputId).value = canvas.toDataURL(); }
 
-    function draw(e) {
-        if (!drawing) return;
-        ctx.lineTo(getX(e), getY(e));
-        ctx.stroke();
-        e.preventDefault();
-    }
+    function getX(e) { return e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.offsetX; }
+    function getY(e) { return e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.offsetY; }
 
-    function stopDraw() {
-        if (!drawing) return;
-        drawing = false;
-        document.getElementById(inputId).value = canvas.toDataURL(); // simpan hasil
-    }
-
-    function getX(e) {
-        if (e.touches) return e.touches[0].clientX - canvas.getBoundingClientRect().left;
-        return e.offsetX;
-    }
-
-    function getY(e) {
-        if (e.touches) return e.touches[0].clientY - canvas.getBoundingClientRect().top;
-        return e.offsetY;
-    }
-
-    // mouse events
     canvas.addEventListener("mousedown", startDraw);
     canvas.addEventListener("mousemove", draw);
     canvas.addEventListener("mouseup", stopDraw);
     canvas.addEventListener("mouseout", stopDraw);
-
-    // touch events (HP/Tablet)
     canvas.addEventListener("touchstart", startDraw);
     canvas.addEventListener("touchmove", draw);
     canvas.addEventListener("touchend", stopDraw);
-    }
+  }
 
-    function clearSignature(canvasId) {
+  function clearSignature(canvasId) {
     const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+  }
 
-    // inisialisasi
-    initSignaturePad("ttd_petugas", "ttd_petugas_data");
-    initSignaturePad("ttd_pemilik", "ttd_pemilik_data");
+  initSignaturePad("ttd_petugas", "ttd_petugas_data");
+  initSignaturePad("ttd_pemilik", "ttd_pemilik_data");
 
   updateProgressbar();
 </script>

@@ -1,0 +1,132 @@
+/* ===== IWKBU Edit Form Styles (Perbaikan) ===== */
+.iwkbu-form {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fefefe;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.iwkbu-form .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.iwkbu-form .form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 6px;
+    color: #374151;
+}
+
+.iwkbu-form .form-group input,
+.iwkbu-form .form-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.iwkbu-form .form-group input:focus,
+.iwkbu-form .form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* ===== Accordion Styles ===== */
+.accordion-item {
+    margin-bottom: 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    transition: box-shadow 0.3s;
+}
+
+.accordion-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.accordion-header {
+    width: 100%;
+    padding: 14px 18px;
+    background: #f9fafb;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    position: relative;
+    transition: background 0.3s;
+}
+
+.accordion-header::after {
+    content: '▸';
+    position: absolute;
+    right: 18px;
+    transition: transform 0.3s;
+}
+
+.accordion-header.active::after {
+    transform: rotate(90deg);
+}
+
+.accordion-header:hover {
+    background: #f3f4f6;
+}
+
+.accordion-body {
+    padding: 0px 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.accordion-body.open {
+    padding: 12px 18px;      /* Tambahkan padding saat dibuka */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Buttons ===== */
+.iwkbu-form .btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.iwkbu-form .btn-primary {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+}
+
+.iwkbu-form .btn-primary:hover {
+    background: #2563eb;
+}
+
+.iwkbu-form .btn-secondary {
+    background: #e5e7eb;
+    color: #374151;
+    border: none;
+}
+
+.iwkbu-form .btn-secondary:hover {
+    background: #d1d5db;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .iwkbu-form .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
