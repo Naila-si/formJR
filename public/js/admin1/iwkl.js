@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     const btnImport = document.getElementById("btnImportIWKL");
     const fileInput = document.getElementById("fileInputIWKL");
+    const deleteForms = document.querySelectorAll('.delete-form');
 
     if (btnImport && fileInput) {
         btnImport.addEventListener("click", () => fileInput.click());
@@ -22,4 +23,23 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+    deleteForms.forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Apakah yakin?',
+                text: "Data IWKL akan dihapus!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
 });

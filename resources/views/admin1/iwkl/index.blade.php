@@ -20,9 +20,10 @@
     <!-- Tabel Data dengan scroll horizontal -->
     <div class="table-responsive">
         <table class="table table-bordered" id="iwklTable">
-            <thead class="table-dark">
+            <thead class="table-dark sticky-header">
                 <tr>
                     <th>No</th>
+                    <th>Aksi</th>
                     <th>Loket</th>
                     <th>Kelas</th>
                     <th>Nama Perusahaan</th>
@@ -63,13 +64,23 @@
                     <th>Des</th>
                     <th>Total</th>
                     <th>% Akt 24 - 23</th>
-                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($iwkls as $index => $data)
                 <tr>
                     <td>{{ $index + 1 }}</td>
+                    <td>
+                        <!-- Edit -->
+                        <a href="{{ route('admin1.iwkl.edit', $data->id) }}" class="btn btn-sm btn-warning">Edit</a>
+
+                        <!-- Hapus -->
+                        <form action="{{ route('admin1.iwkl.destroy', $data->id) }}" method="POST" class="d-inline delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger btn-delete">Hapus</button>
+                        </form>
+                    </td>
                     <td>{{ $data->loket }}</td>
                     <td>{{ $data->kelas }}</td>
                     <td>{{ $data->nama_perusahaan }}</td>
@@ -110,9 +121,6 @@
                     <td>{{ $data->des }}</td>
                     <td>{{ $data->total }}</td>
                     <td>{{ $data->persen_akt }}</td>
-                    <td>
-                        <a href="{{ route('admin1.iwkl.edit', $data->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    </td>
                 </tr>
                 @empty
                 <tr>
@@ -127,9 +135,25 @@
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('css/admin1/iwkl.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 @endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('js/admin1/iwkl.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+$(document).ready(function() {
+    var table = $('#iwklTable').DataTable({
+        pageLength: 50,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        scrollX: true,
+        scrollY: "500px",
+        scrollCollapse: true,
+        fixedHeader: true,
+        dom: '<"top"l>rt<"bottom"ip><"clear">' // << tampilkan length + info
+    });
+});
+</script>
 @endpush

@@ -19,7 +19,6 @@
         <h1>Formulir CRM</h1>
         <p>Isi data kunjungan, armada/kendaraan, lalu upload bukti &amp; penilaian. Ikuti langkah-langkah di bawah ini.</p>
       </div>
-      <div class="badge">Versi Digital</div>
     </div>
 
     <!-- Progress -->
@@ -145,7 +144,7 @@
                   <input type="text" name="kendaraan[nopol][]" class="nopol-input" list="nopolList" placeholder="BM 1234 CD" required>
                   <datalist id="nopolList">
                     @foreach($nopolList as $nopol)
-                      <option value="{{ $nopol }}">
+                      <option value="{{ $nopol}}">
                     @endforeach
                   </datalist>
                 </div>
@@ -219,7 +218,7 @@
 
             <div class="form-group">
               <label>Janji Bayar Tunggakan</label>
-              <input type="date" name="janji_bayar">
+              <input type="datetime-local" name="janji_bayar">
             </div>
           </div>
 
@@ -344,15 +343,15 @@
   .badge{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border-radius:999px;padding:8px 12px;font-weight:700;box-shadow:var(--shadow);font-size:12px;white-space:nowrap}
 
   /* PROGRESS */
-  .progressbar{display:flex;justify-content:space-between;align-items:center;margin:22px 0 24px;position:relative}
+  .progressbar{display:flex;justify-content: space-around;;align-items:center;margin:22px 0 24px;position:relative}
   .progressbar::before{content:"";position:absolute;top:50%;left:0;height:5px;width:100%;background:#dbeafe;transform:translateY(-50%);z-index:0;border-radius:999px}
   .progress{height:5px;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0%;position:absolute;top:50%;left:0;transform:translateY(-50%);transition:.35s;border-radius:999px;z-index:1}
   .progress-step{position:relative;z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#e5edff;color:#1e293b;font-weight:800;box-shadow:0 2px 8px rgba(15,23,42,.12)}
   .progress-step.active{background:var(--brand);color:#fff}
-  .progress-step::after{content:attr(data-title);position:absolute;top:46px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:#64748b}
+  .progress-step::after{content:attr(data-title);position:absolute;top:46px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:#64748b;width: max-content;}
 
   /* SECTION CARD */
-  .section-card{background:var(--panel);border:1px solid #e6eef9;border-radius:20px;padding:18px clamp(14px,2vw,22px);margin-bottom:18px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+  .section-card{background:var(--panel);border:1px solid #e6eef9;border-radius:20px;padding:18px clamp(14px,2vw,22px);margin: 32px 0 18px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
   .section-title{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:18px}
   .section-dot{width:10px;height:10px;border-radius:50%;background:var(--brand)}
   .card-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
@@ -553,6 +552,7 @@
     const ctx = canvas.getContext('2d');
 
     let drawing = false;
+    let ratio = Math.max(window.devicePixelRatio || 1, 1);
 
     function resize(){
       const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -572,11 +572,17 @@
     }
 
     function pos(e){
-      const rect = canvas.getBoundingClientRect();
-      if (e.touches && e.touches[0]){
-        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-      }
-      return { x: e.offsetX, y: e.offsetY };
+        const rect = canvas.getBoundingClientRect();
+        let x, y;
+        if(e.touches && e.touches[0]){
+        x = e.touches[0].clientX - rect.left;
+        y = e.touches[0].clientY - rect.top;
+        } else {
+        x = e.clientX - rect.left;
+        y = e.clientY - rect.top;
+        }
+        // Sesuaikan dengan ratio
+        return { x: x * ratio / (canvas.width / canvas.clientWidth), y: y * ratio / (canvas.height / canvas.clientHeight) };
     }
 
     function start(e){ drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); e.preventDefault(); }

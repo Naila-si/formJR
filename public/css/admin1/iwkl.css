@@ -22,52 +22,30 @@ h2 {
     transition: all 0.2s ease-in-out;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-}
+.btn:hover { transform: translateY(-2px); }
 
-.btn-secondary {
-    background: #6b7280;
-    color: #fff;
-}
-.btn-secondary:hover {
-    background: #4b5563;
-}
+.btn-secondary { background: #6b7280; color: #fff; }
+.btn-secondary:hover { background: #4b5563; }
 
-.btn-success {
-    background: #16a34a;
-    color: #fff;
-}
-.btn-success:hover {
-    background: #15803d;
-}
+.btn-success { background: #16a34a; color: #fff; }
+.btn-success:hover { background: #15803d; }
 
-.btn-danger {
-    background: #dc2626;
-    color: #fff;
-}
-.btn-danger:hover {
-    background: #b91c1c;
-}
+.btn-danger { background: #dc2626; color: #fff; }
+.btn-danger:hover { background: #b91c1c; }
 
-.btn-warning {
-    background: #facc15;
-    color: #000;
-}
-.btn-warning:hover {
-    background: #eab308;
-}
+.btn-warning { background: #facc15; color: #000; }
+.btn-warning:hover { background: #eab308; }
 
 /* === Table === */
 .table-responsive {
+    max-height: 500px;
     overflow-x: auto;
-    margin-top: 15px;
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 
@@ -87,12 +65,79 @@ h2 {
     z-index: 1;
 }
 
-.table tbody tr:nth-child(even) {
-    background: #f9fafb;
+.table tbody tr:nth-child(even) { background: #f9fafb; }
+.table tbody tr:hover { background: #f1f5f9; }
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: #343a40;
+    color: white;
+    z-index: 20;
 }
 
-.table tbody tr:hover {
-    background: #f1f5f9;
+/* === DataTables Styling === */
+.dataTables_length label {
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dataTables_length select {
+    border-radius: 8px;
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.dataTables_length select:hover {
+    background: #eef2f7;
+    border-color: #888;
+}
+
+/* Pagination */
+.dataTables_paginate {
+    display: flex;
+    gap: 6px;
+}
+
+.dataTables_paginate .paginate_button {
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    border: 1px solid #ccc !important;
+    background: #f9f9f9 !important;
+    margin: 0 !important;
+    transition: 0.3s;
+}
+.dataTables_paginate .paginate_button:hover {
+    background: #eef2f7 !important;
+    border-color: #888 !important;
+}
+.dataTables_paginate .paginate_button.current {
+    background: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff !important;
+}
+
+/* Info + Pagination Container */
+.dataTables_wrapper .bottom {
+    display: flex;
+    justify-content: flex-start; /* biar mulai dari kiri */
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.dataTables_info, .dataTables_paginate {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
 }
 
 /* === Text === */
@@ -102,18 +147,30 @@ h2 {
     font-style: italic;
 }
 
-/* === Responsive tweaks === */
+/* === Responsive Layout === */
 @media (max-width: 768px) {
-    .btn {
-        font-size: 0.75rem;
-        padding: 6px 10px;
+    .container { padding: 12px; }
+    h2 { font-size: 1.2rem; text-align: center; }
+    .table { font-size: 0.75rem; }
+
+    .dataTables_wrapper .bottom {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .dataTables_info { text-align: center; }
+    .dataTables_paginate { justify-content: center; flex-wrap: wrap; }
+
+    .dataTables_paginate .paginate_button {
+        padding: 5px 10px !important;
+        font-size: 0.8rem !important;
     }
 
-    h2 {
-        font-size: 1.2rem;
+    .dataTables_length label {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 0.8rem;
+        align-items: flex-start;
     }
-
-    .table {
-        font-size: 0.75rem;
-    }
+    .dataTables_length select { width: 100%; }
 }

@@ -58,7 +58,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin1.formulir.index') }}">
+                        <a href="{{ route('admin1.manifest.index') }}">
                             <span class="material-icons">folder</span> Data Manifest
                         </a>
                     </li>
@@ -91,11 +91,19 @@
             <div class="flex items-center gap-4">
                 <span id="hamburger" class="hamburger material-icons" aria-expanded="false">menu</span>
                 <h1>@yield('title', 'Dashboard')</h1>
-            </div>
-            <div class="user">
-                <span>Hi, Admin</span>
-                <img src="{{ asset('images/User Profile.jpeg') }}" alt="User">
-                <button id="logoutBtn" class="logout-btn">Logout</button>
+
+                <!-- Search -->
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Cari menu..." />
+                    <span class="material-icons search-icon">search</span>
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+
+                <div class="user">
+                    <span>Hi, Admin</span>
+                    <img src="{{ asset('images/User Profile.jpeg') }}" alt="User">
+                    <button id="logoutBtn" class="logout-btn">Logout</button>
+                </div>
             </div>
         </header>
 

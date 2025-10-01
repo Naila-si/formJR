@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\FormulirVerification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -33,7 +34,9 @@ class Formulir extends Model
         'ttd_petugas_data',
         'ttd_pemilik_data',
         'latitude',
-        'longitude'
+        'longitude',
+        'notes',
+        'verification_status'
     ];
 
     protected $casts = [
@@ -45,4 +48,9 @@ class Formulir extends Model
         'tanggal_waktu' => 'datetime',
         'janji_bayar' => 'date'
     ];
+
+    public function verifications()
+    {
+        return $this->hasMany(FormulirVerification::class);
+    }
 }

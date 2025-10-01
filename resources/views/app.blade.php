@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MOVEON • Portal Petugas</title>
+  <title>MOVEON</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -103,7 +103,6 @@
     <nav class="nav">
       <div class="brand">
         <img src="{{ asset('images/logo.png') }}" alt="Logo MOVEON" />
-        <span>MOVEON</span>
       </div>
       <div class="nav-actions">
         <a href="{{ route('login') }}" class="btn btn-ghost">Login</a>
@@ -115,7 +114,7 @@
   <main class="hero" role="main">
     <section class="lead" aria-labelledby="welcomeTitle">
       <h1 id="welcomeTitle">Selamat datang di MOVEON</h1>
-      <p>Sistem digital modern untuk petugas. Kelola data dengan cepat, aman, dan interaktif.</p>
+      <p>Sistem digital modern untuk mengelola data dengan cepat, aman, dan interaktif.</p>
 
       <div class="actions" aria-label="Menu utama">
         <div class="action-card" role="button" tabindex="0" onclick="redirectTo('{{ route('formulir.index') }}')" onkeypress="handleKey(event, '{{ route('formulir.index') }}')">
@@ -139,7 +138,7 @@
   </main>
 
   <footer>
-    © <span id="y"></span> MOVEON — Sistem Digital untuk Petugas Transportasi.
+    © <span id="y"></span> MOVEON — Solusi Digital Transportasi
   </footer>
 
   <!-- Chatbot Floating -->
@@ -165,10 +164,6 @@
 
     <div class="chat-body" id="chatBody">
       <div class="msg bot">Halo! Saya bot MOVEON. Tanyakan seputar <b>Form CRM</b>, <b>Form Manifest</b>, login, jam operasional, atau pilih FAQ di atas.</div>
-    </div>
-    <div class="chat-input">
-      <input id="chatInput" type="text" placeholder="Tulis pesan... (cth: cara isi form manifest)" aria-label="Isi pesan chatbot" />
-      <button id="sendBtn" aria-label="Kirim pesan">Kirim</button>
     </div>
   </div>
 
@@ -197,6 +192,7 @@
       if(open){
         chatWin.classList.add('open');
         clearUnread();
+        playNotify();
       }else{
         chatWin.classList.remove('open');
       }
@@ -319,8 +315,12 @@
     });
 
     function askFromFAQ(text){
-      chatInput.value = text;
-      sendMsg();
+    appendMessage(escapeHtml(text), 'me'); // tampilkan pertanyaan user
+    const answer = findAnswer(normalize(text)) || fallbackWhatsapp();
+    setTimeout(() => {
+        appendMessage(answer, 'bot');
+        bumpUnread();
+    }, 450);
     }
 
     sendBtn.addEventListener('click', sendMsg);
@@ -346,7 +346,6 @@
         typing.remove();
         const answer = findAnswer(val) || fallbackWhatsapp();
         appendMessage(answer, 'bot');
-        playNotify();   // suara saat bot balas
         bumpUnread();   // badge kalau chat tertutup
       }, 450);
     }
@@ -383,6 +382,13 @@
       p.innerText = str;
       return p.innerHTML;
     }
+
+    window.addEventListener('load', () => {
+        markInteracted();   // unlock audio
+        setTimeout(() => {
+            playNotify();     // mainkan suara
+        }, 600);            // kasih delay dikit biar nggak tabrakan sama render
+    });
   </script>
 </body>
 </html>

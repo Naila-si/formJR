@@ -62,4 +62,9 @@ class IwklController extends Controller
         return redirect()->route('admin1.iwkl.index')
                          ->with('success', 'Data IWKL berhasil diperbarui!');
     }
+
+    public function destroy($id) {
+        Iwkl::findOrFail($id)->delete();
+        return redirect()->route('admin1.iwkl.index')->with('success', 'Data berhasil dihapus.');
+    }
 }

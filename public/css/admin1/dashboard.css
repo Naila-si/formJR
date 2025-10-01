@@ -148,6 +148,12 @@ body {
     z-index: 500;
 }
 
+.header .flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .header h1 {
     font-size: 18px;
     font-weight: 700;
@@ -207,6 +213,40 @@ body {
 .logout-btn:hover {
     background-color: var(--primary-color);
     transform: scale(1.05);
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 10px 45px 10px 15px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.search-container input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74,144,226,0.5);
+}
+
+.search-container .search-icon {
+    position: absolute;
+    right: 15px;
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
 }
 
 /* ====== Responsive ====== */

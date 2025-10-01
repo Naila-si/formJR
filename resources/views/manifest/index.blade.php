@@ -9,6 +9,13 @@
 
 <div class="form-wrapper">
   <div class="form-card">
+    <div class="form-header">
+      <div class="title-wrap">
+        <h1>Formulir Manifest</h1>
+        <p>Isi data kapal & keberangkatan, penumpang, lalu upload bukti pencatatan manifest &amp; tanda tangan. Ikuti langkah-langkah di bawah ini.</p>
+      </div>
+    </div>
+
     <div class="progressbar">
       <div class="progress" id="progress"></div>
       <div class="progress-step active" data-title="Data Kapal"></div>
@@ -108,10 +115,11 @@
 
         <div class="form-group">
           <label>Tanda Tangan</label>
-          <canvas id="ttd_petugas" width="500" height="200"
-            style="border:1px solid #ccc; border-radius:8px; cursor: crosshair;"></canvas>
-          <div>
-            <button type="button" onclick="clearSignature('ttd_petugas')">Hapus</button>
+          <div class="signature-card">
+            <canvas id="ttd_petugas" width="500" height="200" style="border:1px solid #ccc; border-radius:8px; cursor: crosshair;"></canvas>
+            <div class="sig-actions">
+                <button type="button" onclick="clearSignature('ttd_petugas')">Hapus</button>
+            </div>
           </div>
           <input type="hidden" name="ttd_petugas_data" id="ttd_petugas_data">
         </div>
@@ -169,34 +177,62 @@ document.getElementById('dewasa').addEventListener('input', hitungTotal);
 document.getElementById('anak').addEventListener('input', hitungTotal);
 
 // Signature pad
-function initSignaturePad(canvasId, inputId) {
-  const canvas = document.getElementById(canvasId);
-  const ctx = canvas.getContext("2d");
-  let drawing = false;
-  ctx.lineWidth = 2;
-  ctx.lineCap = "round";
-  ctx.strokeStyle = "black";
+ function setupSignature(canvasId, inputId){
+    const canvas = document.getElementById(canvasId);
+    const hidden = document.getElementById(inputId);
+    const ctx = canvas.getContext('2d');
 
-  function startDraw(e) { drawing = true; ctx.beginPath(); ctx.moveTo(getX(e), getY(e)); e.preventDefault(); }
-  function draw(e) { if (!drawing) return; ctx.lineTo(getX(e), getY(e)); ctx.stroke(); e.preventDefault(); }
-  function stopDraw() { if (!drawing) return; drawing = false; document.getElementById(inputId).value = canvas.toDataURL(); }
+    let drawing = false;
 
-  function getX(e) { return e.touches ? e.touches[0].clientX - canvas.getBoundingClientRect().left : e.offsetX; }
-  function getY(e) { return e.touches ? e.touches[0].clientY - canvas.getBoundingClientRect().top : e.offsetY; }
+    function resize(){
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const container = canvas.parentElement; // .signature-card
+      const targetWidth = container.clientWidth - 20; // padding
+      const targetHeight = Math.max(260, Math.min(320, Math.round(targetWidth * 0.35))); // 35% dari lebar
 
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", stopDraw);
-  canvas.addEventListener("mouseout", stopDraw);
-  canvas.addEventListener("touchstart", startDraw);
-  canvas.addEventListener("touchmove", draw);
-  canvas.addEventListener("touchend", stopDraw);
-}
+      canvas.style.width = targetWidth + 'px';
+      canvas.style.height = targetHeight + 'px';
+      canvas.width = Math.floor(targetWidth * ratio);
+      canvas.height = Math.floor(targetHeight * ratio);
 
-function clearSignature(canvasId) {
-  const canvas = document.getElementById(canvasId);
-  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-}
+      ctx.scale(ratio, ratio);
+      ctx.lineWidth = 2;
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = '#111827';
+    }
+
+    function pos(e){
+      const rect = canvas.getBoundingClientRect();
+      if (e.touches && e.touches[0]){
+        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+      }
+      return { x: e.offsetX, y: e.offsetY };
+    }
+
+    function start(e){ drawing = true; ctx.beginPath(); const p = pos(e); ctx.moveTo(p.x, p.y); e.preventDefault(); }
+    function move(e){ if(!drawing) return; const p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); e.preventDefault(); }
+    function end(){ if(!drawing) return; drawing = false; hidden.value = canvas.toDataURL('image/png'); }
+
+    resize();
+    window.addEventListener('resize', () => { const data = ctx.getImageData(0,0,canvas.width,canvas.height); resize(); ctx.putImageData(data,0,0); });
+
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    canvas.addEventListener('mouseup', end);
+    canvas.addEventListener('mouseleave', end);
+
+    canvas.addEventListener('touchstart', start, {passive:false});
+    canvas.addEventListener('touchmove', move, {passive:false});
+    canvas.addEventListener('touchend', end);
+  }
+
+  function clearSignature(canvasId){
+    const canvas = document.getElementById(canvasId);
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  window.clearSignature = clearSignature;
+  setupSignature("ttd_petugas", "ttd_petugas_data");
 
 initSignaturePad("ttd_petugas", "ttd_petugas_data");
 
@@ -204,190 +240,110 @@ updateProgressbar();
 </script>
 
 <style>
-/* General wrapper */
-.form-wrapper {
-  display: flex;
-  justify-content: center;
-  margin: 40px 20px;
-  font-family: 'Poppins', sans-serif;
-}
-.form-card {
-  background: #f9faff;
-  padding: 40px 30px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-  width: 100%;
-  max-width: 650px;
-  transition: all 0.3s ease;
-}
+  :root{
+    --bg:#eef6ff; --panel:#ffffff; --soft:#f8fafc;
+    --ink:#0f172a; --muted:#475569;
+    --brand:#2563eb; --brand-2:#3b82f6; --accent:#10b981;
+    --danger:#ef4444;
+    --shadow:0 12px 28px rgba(37,99,235,.12);
+    --radius:16px; --radius-lg:18px;
+    --gap:18px;
+  }
 
-/* Back button */
-.back-btn {
-  background: none;
-  border: none;
-  font-size: 1.3rem;
-  cursor: pointer;
-  margin-bottom: 20px;
-  color: #555;
-  transition: 0.3s;
-}
-.back-btn:hover {
-  color: #007bff;
-  transform: translateX(-2px);
-}
+  /* ====== LAYOUT FULL LAYAR ====== */
+  body{background:linear-gradient(180deg,var(--bg),#fff);font-family:'Inter','Segoe UI',sans-serif;margin:0}
+  .form-wrapper{
+    display:flex;justify-content:center;align-items:flex-start;
+    padding:28px clamp(8px,2vw,22px);
+  }
+  .form-card{
+    background:var(--panel);border:1px solid #e2e8f0;border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    padding: clamp(22px,2.2vw,32px);
+    /* Full layar tapi tetap ada gutter kiri/kanan */
+    width: min(1400px, 96vw);
+  }
 
-/* Progress Bar modern */
-.progressbar {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  margin-bottom: 35px;
-}
-.progress {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  height: 5px;
-  background: linear-gradient(90deg, #007bff, #00c6ff);
-  transform: translateY(-50%);
-  border-radius: 5px;
-  transition: width 0.4s ease;
-}
-.progress-step {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #e0e0e0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-}
-.progress-step.active {
-  background: #007bff;
-  transform: scale(1.2);
-}
-.progress-step::after {
-  content: attr(data-title);
-  position: absolute;
-  top: 35px;
-  font-size: 0.8rem;
-  color: #555;
-  white-space: nowrap;
-  text-align: center;
-  transform: translateX(-50%);
-}
+  /* HEADER */
+  .form-header{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+  .form-header h1{margin:0 0 6px 0;font-size:clamp(22px,3.2vw,32px);color:var(--brand)}
+  .form-header p{margin:0;color:var(--muted);font-size:clamp(13px,1.3vw,15px);line-height:1.55}
+  .badge{background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border-radius:999px;padding:8px 12px;font-weight:700;box-shadow:var(--shadow);font-size:12px;white-space:nowrap}
 
-/* Form Steps */
-.form-step {
-  display: none;
-  flex-direction: column;
-  gap: 20px;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.4s ease;
-}
-.form-step.active {
-  display: flex;
-  opacity: 1;
-  transform: translateY(0);
-}
+  /* PROGRESS */
+  .progressbar{display:flex;justify-content: space-around;;align-items:center;margin:22px 0 24px;position:relative}
+  .progressbar::before{content:"";position:absolute;top:50%;left:0;height:5px;width:100%;background:#dbeafe;transform:translateY(-50%);z-index:0;border-radius:999px}
+  .progress{height:5px;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0%;position:absolute;top:50%;left:0;transform:translateY(-50%);transition:.35s;border-radius:999px;z-index:1}
+  .progress-step{position:relative;z-index:2;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#e5edff;color:#1e293b;font-weight:800;box-shadow:0 2px 8px rgba(15,23,42,.12)}
+  .progress-step.active{background:var(--brand);color:#fff}
+  .progress-step::after{content:attr(data-title);position:absolute;top:46px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;color:#64748b;width: max-content;}
 
-/* Titles */
-.title {
-  font-size: 1.6rem;
-  font-weight: 600;
-  text-align: center;
-  color: #007bff;
-  margin-bottom: 25px;
-}
+  /* SECTION CARD */
+  .section-card{background:var(--panel);border:1px solid #e6eef9;border-radius:20px;padding:18px clamp(14px,2vw,22px);margin: 32px 0 18px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+  .section-title{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:18px}
+  .section-dot{width:10px;height:10px;border-radius:50%;background:var(--brand)}
+  .card-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:8px}
 
-/* Form group modern */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-.form-group label {
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #333;
-}
-.form-group input,
-.form-group select {
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 1rem;
-  outline: none;
-  transition: all 0.3s ease;
-}
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
-}
+  /* GRID SEDERHANA (1 kolom) */
+  .grid-1{display:grid;grid-template-columns:1fr;gap:var(--gap)}
+  .row-col{display:flex;flex-direction:column;gap:10px}
+  .stack{display:flex;flex-direction:column}
+  .gap-16{gap:16px}
+  .w-fit{width:fit-content}
+  .divider{border:0;border-top:1px solid #e2e8f0;margin:12px 0 0}
 
-/* Grid layout for smaller inputs */
-.form-group.double {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+  /* FORM CONTROL */
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-group label{font-weight:700;color:#0f172a}
+  .form-group input,.form-group select,.form-group textarea{
+    width:100%;padding:12px 12px;border-radius:12px;border:1px solid #e2e8f0;background:var(--soft);font-size:15px;outline:none;transition:border-color .15s, box-shadow .15s
+  }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+    border-color:#93c5fd; box-shadow:0 0 0 3px rgba(147,197,253,.35);
+    background:#fff;
+  }
+  .form-group textarea{min-height:120px}
+  .muted{color:#64748b}
 
-/* Buttons */
-.btns-group {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 25px;
-  gap: 10px;
-}
-.btn, .btn-submit {
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.next-btn {
-  background: linear-gradient(90deg, #007bff, #00c6ff);
-  color: #fff;
-  box-shadow: 0 5px 15px rgba(0,123,255,0.3);
-}
-.prev-btn {
-  background: #6c757d;
-  color: #fff;
-}
-.btn-submit {
-  background: linear-gradient(90deg, #28a745, #71e76a);
-  color: #fff;
-  width: 100%;
-  box-shadow: 0 5px 15px rgba(40,167,69,0.3);
-}
-.btn:hover, .btn-submit:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
+  /* KENDARAAN CARD */
+  .kendaraan-item{margin:0;padding:16px;border:1px solid #e6eef9;border-radius:16px;background:#fff;box-shadow:0 6px 14px rgba(15,23,42,.04)}
+  .item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 
-/* Canvas modern */
-canvas {
-  width: 100%;
-  max-width: 100%;
-  border: 1px dashed #007bff;
-  border-radius: 12px;
-  cursor: crosshair;
-}
+  /* SIGNATURE (BESAR & RESPONSIF) */
+  .signature-card{padding:12px;border:1px dashed #cbd5e1;border-radius:14px;background:#fff}
+  .signature{display:block;width:100%;height:auto;max-width:100%}
+  .sig-actions{margin-top:8px}
 
-/* Input file */
-input[type="file"] {
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px dashed #ccc;
-  transition: 0.3s;
-}
-input[type="file"]:hover {
-  border-color: #007bff;
-  background: #f0f8ff;
-}
+  /* BUTTONS */
+  .btn{padding:10px 16px;border-radius:12px;border:0;background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;font-weight:800;box-shadow:var(--shadow);cursor:pointer;transition:.2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.ghost{background:#eef2ff;color:#1e293b;border:1px solid #c7d2fe}
+  .btn-secondary{margin:10px 0;padding:9px 14px;background:#eaf2ff;color:#1e3a8a;border:1px solid #93c5fd;border-radius:10px;font-weight:700;cursor:pointer}
+  .btn-danger{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;border-radius:10px;padding:6px 10px;cursor:pointer}
+  .btn-submit{background:linear-gradient(135deg,#16a34a,#0ea5e9);padding:12px 22px;border-radius:14px;color:#fff;border:0;font-weight:800;box-shadow:0 10px 24px rgba(16,163,74,.2)}
+
+  /* STEP VISIBILITY */
+  .form-step{display:none;animation:fadeIn .25s ease}
+  .form-step.active{display:block}
+  .hidden{display:none}
+
+  /* BACK BUTTON */
+  .back-btn{
+    position:fixed;top:18px;left:18px;z-index:60;
+    background:linear-gradient(90deg,var(--brand),var(--brand-2));color:#fff;border:0;
+    width:44px;height:44px;border-radius:50%;font-size:18px;font-weight:800;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);transition:.2s
+  }
+  .back-btn:hover{transform:translateY(-2px)}
+
+  /* RATING */
+  .rating{display:flex;flex-direction:row-reverse;gap:6px;justify-content:flex-start}
+  .rating input{display:none}
+  .rating label{font-size:28px;color:#cbd5e1;cursor:pointer;transition:.2s;padding:0 2px}
+  .rating input:checked ~ label,.rating label:hover,.rating label:hover ~ label{color:#f59e0b;transform:scale(1.06)}
+
+  /* ANIMATION */
+  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 </style>
 
 @endsection

@@ -49,15 +49,28 @@ Route::get('/get-os/{nopol}', [FormulirController::class, 'getOutstanding'])->na
 Route::get('/manifest', [ManifestController::class, 'index'])->name('manifest.index');
 Route::post('/manifest', [ManifestController::class, 'store'])->name('manifest.store');
 
+
+Route::middleware('auth')->group(function() {
+    Route::get('admin1/formulir/{id}', [FormulirController::class, 'show'])
+        ->name('admin1.formulir.show');
+
+    Route::post('admin1/formulir/{id}/verification', [FormulirController::class, 'storeVerification'])
+        ->name('admin1.formulir.verification');
+});
+
 // ========================
 // ADMIN ROUTES
 // ========================
-Route::prefix('admin1')->name('admin1.')->group(function () {
+Route::prefix('admin1')->name('admin1.')->middleware('auth')->group(function () {
     // FORMULIR - ADMIN
     Route::get('/formulir', [FormulirController::class, 'adminIndex'])->name('formulir.index');
+    Route::get('/formulir/{id}', [FormulirController::class, 'show'])->name('formulir.show');
+    Route::post('/formulir/{id}/notes', [FormulirController::class, 'addNotes'])->name('formulir.addNotes');
     Route::get('/formulir/{id}/edit', [FormulirController::class, 'edit'])->name('formulir.edit');
     Route::put('/formulir/{id}', [FormulirController::class, 'update'])->name('formulir.update');
     Route::delete('/formulir/{id}', [FormulirController::class, 'destroy'])->name('formulir.destroy');
+    Route::get('/formulir/{id}/export-pdf', [FormulirController::class, 'exportPdf'])->name('formulir.exportPdf');
+    Route::post('/formulir/{id}/undo', [FormulirController::class, 'undo'])->name('formulir.undo');
 
     // IWKBU
     Route::get('iwkbu', [IwkbuController::class, 'index'])->name('iwkbu.index');
@@ -73,11 +86,22 @@ Route::prefix('admin1')->name('admin1.')->group(function () {
     Route::post('iwkl/import', [IwklController::class, 'import'])->name('iwkl.import');
     Route::get('iwkl/export/excel', [IwklController::class, 'exportExcel'])->name('iwkl.export.excel');
     Route::get('iwkl/export/pdf', [IwklController::class, 'exportPdf'])->name('iwkl.export.pdf');
+    Route::get('iwkl/{id}/edit', [IwklController::class, 'edit'])->name('iwkl.edit');
+    Route::put('iwkl/{id}', [IwklController::class, 'update'])->name('iwkl.update');
+    Route::delete('iwkl/{id}', [IwklController::class, 'destroy'])->name('iwkl.destroy');
 
     // RKCRM
     Route::get('/rkcrm', [RkcrmController::class, 'index'])->name('rkcrm.index');
+    Route::get('/rkcrm/create', [RkcrmController::class, 'create'])->name('rkcrm.create');
+    Route::post('/rkcrm/store', [RkcrmController::class, 'store'])->name('rkcrm.store');
     Route::post('/rkcrm/import', [RkcrmController::class, 'import'])->name('rkcrm.import');
     Route::get('/rkcrm/export/excel', [RkcrmController::class, 'exportExcel'])->name('rkcrm.export.excel');
     Route::get('/rkcrm/export/pdf', [RkcrmController::class, 'exportPDF'])->name('rkcrm.export.pdf');
     Route::get('/rkcrm/edit/{id}', [RkcrmController::class, 'edit'])->name('rkcrm.edit');
+    Route::put('/rkcrm/{id}', [RkcrmController::class, 'update'])->name('rkcrm.update');
+    
+    // MANIFEST
+    Route::get('/manifest', [ManifestController::class, 'adminIndex'])->name('manifest.index');
+    Route::post('/manifest', [ManifestController::class, 'store'])->name('manifest.store');
+    Route::delete('/manifest/{id}', [ManifestController::class, 'destroy'])->name('manifest.destroy');
 });

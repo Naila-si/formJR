@@ -45,4 +45,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function verifications()
+    {
+        return $this->hasMany(FormulirVerification::class);
+    }
 }

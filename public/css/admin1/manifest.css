@@ -1,0 +1,211 @@
+.manifest-title {
+    font-size: 1.6rem;   /* agak besar */
+    font-weight: 700;    /* super bold */
+    color: #2c3e50;      /* biar konsisten sama tabel */
+    margin-bottom: 20px;
+    text-transform: uppercase; /* opsional: biar kapital semua */
+    letter-spacing: 1px;       /* opsional: kasih spasi antar huruf */
+}
+
+/* === Container === */
+.container {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* === Heading === */
+h2 {
+    color: #333;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* === Table ala IWKBU === */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.table thead th {
+    background: #2c3e50;  /* warna gelap khas IWKBU */
+    color: #fff;
+    font-weight: 600;
+    padding: 12px;
+    border: 1px solid #2c3e50;
+    text-align: left;
+}
+
+.table tbody td {
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+/* Baris genap */
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+/* Hover */
+.table tbody tr:hover {
+    background-color: #eaf2f8;
+    transition: background 0.25s;
+}
+
+/* === Pagination & Length ala IWKBU === */
+.dataTables_length label {
+    font-weight: 500;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dataTables_length select {
+    border-radius: 6px;
+    padding: 5px 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.dataTables_length select:hover {
+    border-color: #2c3e50;
+}
+
+/* Info */
+.dataTables_info {
+    font-size: 0.85rem;
+    color: #555;
+}
+
+/* Pagination */
+.dataTables_paginate {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.dataTables_paginate .paginate_button {
+    border-radius: 6px !important;
+    padding: 6px 12px !important;
+    border: 1px solid #ccc !important;
+    background: #f9f9f9 !important;
+    color: #333 !important;
+    transition: 0.2s;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background: #2c3e50 !important;
+    color: #fff !important;
+    border-color: #2c3e50 !important;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff !important;
+}
+
+/* Rapatkan info dan pagination */
+.dataTables_wrapper .bottom {
+    display: flex;
+    justify-content: flex-start; /* mulai dari kiri */
+    align-items: center;
+    gap: 8px; /* jarak antar info & pagination */
+    font-size: 0.85rem; /* sesuaikan ukuran font */
+    margin-top: 10px;
+}
+
+/* Pagination tombol */
+.dataTables_paginate {
+    margin: 0;
+}
+
+.dataTables_paginate .paginate_button {
+    border-radius: 5px !important;
+    padding: 4px 10px !important;
+    margin: 0 !important; /* hapus jarak default */
+    font-size: 0.85rem !important;
+    transition: 0.2s;
+}
+
+.dataTables_paginate .paginate_button.current {
+    background-color: #007bff !important;
+    color: #fff !important;
+    border-color: #007bff !important;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background-color: #007bff !important;
+    color: #fff !important;
+}
+
+/* === Responsive Layout === */
+@media (max-width: 768px) {
+    .container {
+        padding: 12px;
+        border-radius: 8px;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    /* Bungkus tabel biar bisa scroll horizontal */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+
+    .table {
+        font-size: 0.8rem;
+        min-width: 600px; /* biar kolom nggak terlalu sempit */
+    }
+
+    /* Dropdown & info stack ke bawah */
+    .dataTables_wrapper .bottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .dataTables_length label {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        font-size: 0.8rem;
+    }
+
+    .dataTables_length select {
+        width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .dataTables_info {
+        text-align: center;
+        font-size: 0.8rem;
+    }
+
+    .dataTables_paginate {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .dataTables_paginate .paginate_button {
+        padding: 5px 10px !important;
+        font-size: 0.75rem !important;
+    }
+}
