@@ -66,7 +66,10 @@
             </div>
 
             <p class="sidebar-section">PERENCANAAN EVALUASI</p>
-            <a href="#"><span class="material-icons">event_note</span> RK Jadwal dan Target</a>
+            <a href="{{ route('admin1.rk.jadwal') }}"
+                class="{{ request()->routeIs('admin1.rk.jadwal') ? 'active' : '' }}">
+                <span class="material-icons">event_note</span> RK Jadwal dan Target
+            </a>
 
             <p class="sidebar-section">SETTINGS</p>
             <!-- Parent menu Access Control -->
