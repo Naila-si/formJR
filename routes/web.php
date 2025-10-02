@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FormulirController;
 use App\Http\Controllers\ManifestController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin1\RKScheduleController;
 use App\Http\Controllers\Admin1\IwklController;
 use App\Http\Controllers\Admin1\IwkbuController;
 use App\Http\Controllers\Admin1\RkcrmController;
@@ -99,9 +100,19 @@ Route::prefix('admin1')->name('admin1.')->middleware('auth')->group(function () 
     Route::get('/rkcrm/export/pdf', [RkcrmController::class, 'exportPDF'])->name('rkcrm.export.pdf');
     Route::get('/rkcrm/edit/{id}', [RkcrmController::class, 'edit'])->name('rkcrm.edit');
     Route::put('/rkcrm/{id}', [RkcrmController::class, 'update'])->name('rkcrm.update');
-    
+
     // MANIFEST
     Route::get('/manifest', [ManifestController::class, 'adminIndex'])->name('manifest.index');
     Route::post('/manifest', [ManifestController::class, 'store'])->name('manifest.store');
     Route::delete('/manifest/{id}', [ManifestController::class, 'destroy'])->name('manifest.destroy');
+
+    // JADWAL RK
+    Route::get('/rk/jadwal', [RKScheduleController::class, 'index'])->name('rk.jadwal');
+
+    Route::post('/rk/shifts',               [RKScheduleController::class, 'store'])->name('rk.shifts.store');
+    Route::put('/rk/shifts/{shift}',        [RKScheduleController::class, 'update'])->name('rk.shifts.update');
+    Route::delete('/rk/shifts/{shift}',     [RKScheduleController::class, 'destroy'])->name('rk.shifts.destroy');
+
+    Route::post('/rk/day-metrics', [RKScheduleController::class, 'storeMetric'])->name('rk.metrics.store');
+    Route::put('/rk/day-metrics/{metric}', [RKScheduleController::class, 'updateMetric'])->name('rk.metrics.update');
 });
